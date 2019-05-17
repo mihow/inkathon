@@ -73,16 +73,11 @@ class Inking {
 	}
 
 	redraw(dirtyArea = this.canvas.bounds) {
-// let area = null
-// console.log(this.strokes, dirtyArea)
 		this.strokes.forEach(stroke => {
-// console.log(stroke.bounds)
-// area = RectTools.union(area, stroke.bounds)
 			this.strokeRenderer.draw(stroke);
 			this.strokeRenderer.blendStroke(this.strokesLayer);
 		});
-// console.log(area)
-		// this.canvas.clear(area, Color.RED);
+
 		this.canvas.clear(dirtyArea);
 		this.canvas.blend(this.strokesLayer, {rect: dirtyArea});
 	}
@@ -95,6 +90,8 @@ class Inking {
 	clear() {
 		this.strokesLayer.clear();
 		this.canvas.clear();
+
+		this.strokes = [];
 	}
 
 	encode() {
