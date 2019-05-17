@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>WILL 3 beta demo</title>
+
+	<script src="./engine/kotlin.js"></script>
+	<script src="./engine/wacom-digital-ink-min.js"></script>
+
+	<script src="./node-modules/protobuf.min.js"></script>
+
+	<script type="text/javascript">
+		const {
+			PolygonBrush, ParticleBrush,
+			InkDevice, InkSensorChannel, SensorData,
+			PathPoint, InkBuilder, Stroke,
+			Color, RectTools,
+			InkCanvas2D, StrokeRenderer2D,
+			InkCanvasGL, StrokeRendererGL,
+			InkCodec,
+			DataModel, Group, Chunk
+		} = DigitalInk;
+	</script>
+
+	<script src="./scripts/BrushPalette.js"></script>
+	<script src="./scripts/Calculators.js"></script>
+
+	<script src="./scripts/Inking.js"></script>
+	<script src="./scripts/VectorInking.js"></script>
+	<script src="./scripts/RasterInking.js"></script>
+
+	<script type="text/javascript">
+		function init() {
+			let sample = parseInt(localStorage.getItem("sample"));
+
+			if (sample) {
+				if (sample == 1 || sample == 3)
+					document.querySelector("#VectorBrush").style.display = "";
+
+				if (sample == 3)
+					document.querySelector("#RasterBrush").style.display = "";
+				else
+					document.querySelector("#analyse").style.display = "";
+
+				document.querySelector(".title").innerText = sample + ". " +  document.querySelector("#sample" + sample).innerHTML;
+				document.querySelector(".app").style.display = "";
+			}
+			else
+				document.querySelector(".menu").style.display = "";
+
+			window.sample = sample;
+		}
+
+		function analyse() {
+			let bytes = WILL.encode();
+
+			let url = "https://api-web.wacom.com/api/semantic/v1.0/enrich?language=en&country=US&hwr_engine=myscript&output=will3";
+			let options = {method: "POST", body: bytes};
+
+			fetch(url, options).then(response => {
+				return response.arrayBuffer();
+			}).then(buffer => {
+				let data = WILL.decode(new Uint8Array(buffer));
+
+				console.log(data)
+			}).catch(console.error)
+		}
+
+		function load(sample) {
+			if (!sample)
+				localStorage.clear()
+			else
+				localStorage.setItem("sample", sample);
+
+			location.reload();
+		}
+
+		addEventListener("load", init);
+	</script>
+
+	<script src="./main.js"></script>
+
+	<style type="text/css">
+		body {overflow: hidden; margin: 0; position: relative; touch-action: none;}
+		svg {width: 100vw; height: 100vh;}
+		/*canvas {width: 100vw; height: 100vh;}*/
+		canvas {border: 1px solid black; cursor: default;}
+		.app {position: relative;}
+		.title {position: absolute; top: 0; right: 0; margin-right: 20px;}
+		.menu {margin: 20px}
+		.buttons {overflow: hidden; padding-left: 20px;}
+		.buttons .right {float: right; margin-right: 20px;}
+
+		#VectorBrush {display: inline-block;};
+	</style>
+</head>
+<body>
+	<div class="menu" style="display: none">
+		<h2>Samples content</h2>
+
+		<ol>
+			<li>Drawing with Pointing Devices</li>
+			<ol>
+				<li><a href="javascript: void(0)" id="sample1" onclick="load(1)">Vector Brush</a></li>
+				<li><a href="javascript: void(0)" id="sample2" onclick="load(2)">Particle Brush</a></li>
+				<li><a href="javascript: void(0)" id="sample3" onclick="load(3)">Mixed inking (Vector and Particle)</a></li>
+			</ol>
+		</ol>
+	</div>
+
+	<div class="app" style="display: none">
+		<h3 class="title"></h3>
+		<canvas id="canvas" oncontextmenu="event.preventDefault()"></canvas>
+		<div class="buttons">
+			<div id="VectorBrush" style="display: none">
+				<button onclick="WILL.switch(WILL.Color.from(255, 0, 0, 0.3))">RED - alpha 0.3</button>
+				<button onclick="WILL.switch(WILL.Color.from(0, 255, 0, 0.5))">GREEN - alpha 0.5</button>
+				<button onclick="WILL.switch(WILL.Color.from(0, 0, 255, 1))">BLUE - alpha 1</button>
+			</div>
+
+			<button id="RasterBrush" onclick="WILL.switch()" style="display: none">raster</button>
+
+			<button onclick="WILL.clear()">clear</button>
+
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<button id="analyse" style="display: none" onclick="analyse()">analyse</button>
+
+			<div class="right">
+				<button onclick="load()">Back to menu</button>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
