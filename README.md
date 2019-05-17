@@ -7,7 +7,7 @@ Be aware that the **technology components are still under active development** w
 
 # Description
 
-The sample application demonstrates ink rendering through use of WILL 3.0 for Ink using JavaScript implementation.
+The sample application demonstrates ink rendering through the use of WILL 3.0 for Ink using a JavaScript implementation.
 
 WILL rendering is split into vector and raster rendering. Vector rendering is a technique that fills the stroke boundary of a path with solid color *(see Figure 1)*
 
