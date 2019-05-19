@@ -32,89 +32,114 @@
 	<script src="./scripts/RasterInking.js"></script>
 
 	<script type="text/javascript">
-		window.object_counts = {
-			'adults': 0,
-			'juveniles': 0,
-			'pups': 0
-		};
 
-		function init() {
-			let sample = parseInt(localStorage.getItem("sample"));
+window.object_counts = {
+	'adults': 0,
+	'juveniles': 0,
+	'pups': 0
+};
 
-			if (sample) {
-				document.querySelector("#VectorBrush").style.display = "";
-				document.querySelector("#analyse").style.display = "";
+function init() {
+	let sample = parseInt(localStorage.getItem("sample"));
 
-				document.querySelector(".app").style.display = "";
-			}
-			else
-				document.querySelector(".menu").style.display = "";
+	if (sample) {
+		document.querySelector("#VectorBrush").style.display = "";
+		document.querySelector("#analyse").style.display = "";
 
-			window.sample = sample;
-		}
+		document.querySelector(".app").style.display = "";
+	}
+	else
+		document.querySelector(".menu").style.display = "";
 
-		function analyse() {
-			let bytes = WILL.encode();
+	window.sample = sample;
+}
 
-			let url = "https://api-web.wacom.com/api/semantic/v1.0/enrich?language=en&country=US&hwr_engine=experimental&output=will3";
-			let options = {method: "POST", body: bytes};
+function analyse() {
+	let bytes = WILL.encode();
 
-			fetch(url, options).then(response => {
-				return response.arrayBuffer();
-			}).then(buffer => {
-				let data = WILL.decode(new Uint8Array(buffer));
+	let url = "https://api-web.wacom.com/api/semantic/v1.0/enrich?language=en&country=US&hwr_engine=experimental&output=will3";
+	let options = {method: "POST", body: bytes};
 
-				console.log(data)
-			}).catch(console.error)
-		}
+	fetch(url, options).then(response => {
+		return response.arrayBuffer();
+	}).then(buffer => {
+		let data = WILL.decode(new Uint8Array(buffer));
 
-		function nextImage() {
-			let el = document.getElementById("canvas");
-			el.className = el.className + "0";
-			console.log(el.className);
-			window.WILL.clear();
-		}
+		console.log(data)
+	}).catch(console.error)
+}
 
-		function load(sample) {
-			if (!sample)
-				localStorage.clear()
-			else
-				localStorage.setItem("sample", sample);
+function analyse_ms() {
+	let bytes = WILL.encode();
+	console.log(bytes);
 
-			location.reload();
-		}
+	let url = "https://https://westus2.api.cognitive.microsoft.com/inkrecognizer/v1.0-preview/recognize";
+	let options = {method: "PUT", body: bytes};
 
-		addEventListener("load", init);
+	fetch(url, options).then(response => {
+		return response.arrayBuffer();
+	}).then(buffer => {
+		let data = WILL.decode(new Uint8Array(buffer));
 
-		function updateCount() {
-			let el = document.getElementById("object_count");
-			el.innerHTML = window.WILL.strokes.length;
-			console.log("Objects Counted:", window.WILL.strokes.length);
-		}
+		console.log(data)
+	}).catch(console.error)
+}
 
-		function updateColor() {
-			let colors = [
-				WILL.Color.from(255, 0, 0, 1),
-				WILL.Color.from(255, 0, 0, 1),
-				WILL.Color.from(255, 0, 0, 1),
-				WILL.Color.from(255, 0, 0, 1),
-				WILL.Color.from(255, 0, 0, 1),
-				WILL.Color.from(255, 0, 0, 1),
-				WILL.Color.from(0, 255, 0, 1),
-				WILL.Color.from(0, 0, 255, 1)
-			]
-			let color_idx = Math.floor(Math.random() * colors.length);  
-			// WILL.switch(colors[color_idx]);
-		}
+function nextImage() {
+	let el = document.getElementById("canvas");
+	el.className = el.className + "0";
+	console.log(el.className);
+	window.WILL.clear();
+}
+
+function load(sample) {
+	if (!sample)
+		localStorage.clear()
+	else
+		localStorage.setItem("sample", sample);
+
+	location.reload();
+}
+
+
+
+addEventListener("load", init);
+
+function updateCount() {
+	let el = document.getElementById("object_count");
+	el.innerHTML = window.WILL.strokes.length;
+	console.log("Objects Counted:", window.WILL.strokes.length);
+}
+
+function updateColor() {
+	let colors = [
+		WILL.Color.from(255, 0, 0, 1),
+		WILL.Color.from(255, 0, 0, 1),
+		WILL.Color.from(255, 0, 0, 1),
+		WILL.Color.from(255, 0, 0, 1),
+		WILL.Color.from(255, 0, 0, 1),
+		WILL.Color.from(255, 0, 0, 1),
+		WILL.Color.from(0, 255, 0, 1),
+		WILL.Color.from(0, 0, 255, 1)
+	]
+	let color_idx = Math.floor(Math.random() * colors.length);  
+	// WILL.switch(colors[color_idx]);
+}
 	</script>
 
 	<script src="./main.js"></script>
 
 	<style type="text/css">
-		body {overflow: hidden; margin: 0; position: relative; touch-action: none;}
+		body {
+			overflow: hidden; margin: 0; position: relative; touch-action: none;
+		}
 		svg {width: 100vw; height: 80vh;}
 		/*canvas {width: 100vw; height: 100vh;}*/
-
+		.app {
+			background-image: url(/media/graticule.png);
+			background-repeat: none;
+			background-position: center center;
+		}
 		canvas {
 			border: 1px solid #ccc; cursor: default;
 			background-repeat: no-repeat;
@@ -188,6 +213,7 @@
 				<button style="background-color: pink"; onclick="WILL.switch(WILL.Color.from(255, 0, 0, 1))">Adult</button>
 				<button style="background-color: lightgreen"; onclick="WILL.switch(WILL.Color.from(0, 255, 0, 1))">Juvenile</button>
 				<button style="background-color: lightblue"; onclick="WILL.switch(WILL.Color.from(0, 0, 255, 1))">Pup</button>
+				<button onclick="analyse_ms()">Process</button>
 			</div>
 
 
