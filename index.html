@@ -32,6 +32,12 @@
 	<script src="./scripts/RasterInking.js"></script>
 
 	<script type="text/javascript">
+		window.object_counts = {
+			'adults': 0,
+			'juveniles': 0,
+			'pups': 0
+		};
+
 		function init() {
 			let sample = parseInt(localStorage.getItem("sample"));
 
@@ -39,7 +45,6 @@
 				document.querySelector("#VectorBrush").style.display = "";
 				document.querySelector("#analyse").style.display = "";
 
-				document.querySelector(".title").innerText = sample + ". " +  document.querySelector("#sample" + sample).innerHTML;
 				document.querySelector(".app").style.display = "";
 			}
 			else
@@ -63,7 +68,7 @@
 			}).catch(console.error)
 		}
 
-		function next_image() {
+		function nextImage() {
 			let el = document.getElementById("canvas");
 			el.className = el.className + "0";
 			console.log(el.className);
@@ -90,11 +95,16 @@
 		function updateColor() {
 			let colors = [
 				WILL.Color.from(255, 0, 0, 1),
+				WILL.Color.from(255, 0, 0, 1),
+				WILL.Color.from(255, 0, 0, 1),
+				WILL.Color.from(255, 0, 0, 1),
+				WILL.Color.from(255, 0, 0, 1),
+				WILL.Color.from(255, 0, 0, 1),
 				WILL.Color.from(0, 255, 0, 1),
 				WILL.Color.from(0, 0, 255, 1)
 			]
 			let color_idx = Math.floor(Math.random() * colors.length);  
-			WILL.switch(colors[color_idx]);
+			// WILL.switch(colors[color_idx]);
 		}
 	</script>
 
@@ -102,56 +112,91 @@
 
 	<style type="text/css">
 		body {overflow: hidden; margin: 0; position: relative; touch-action: none;}
-		svg {width: 100vw; height: 100vh;}
+		svg {width: 100vw; height: 80vh;}
 		/*canvas {width: 100vw; height: 100vh;}*/
+
 		canvas {
 			border: 1px solid #ccc; cursor: default;
 			background-repeat: no-repeat;
 			background-position: center center;
 		}
-		.sample_0 { background-image: url(/media/sealions/41.jpg); }
-		.sample_00 { background-image: url(/media/sealions/42.jpg); }
-		.sample_000 { background-image: url(/media/sealions/43.jpg); }
-		.sample_0000 { background-image: url(/media/sealions/44.jpg); }
+		.sample_0 { 
+			background-image: url(/media/sealions/41.jpg); 
+			background-position: center bottom;
+		}
+		.sample_00 { 
+			background-image: url(/media/sealions/42.jpg); 
+			background-position: center right;
+		}
+		.sample_000 { 
+			background-image: url(/media/sealions/43.jpg); 
+			background-position: center center;
+		}
+		.sample_0000 { 
+			background-image: url(/media/sealions/44.jpg); 
+			background-position: -2500px center;
+		}
 		.app {position: relative;}
 		.title {position: absolute; top: 0; right: 0; margin-right: 20px;}
-		.menu {margin: 20px}
-		.buttons {overflow: hidden; padding-left: 20px;}
-		.buttons .right {float: right; margin-right: 20px;}
+		.menu {margin: 20px; font-size: 300%;}
+		.buttons {
+			padding-left: 20px;
+			position: absolute;
+			height: 10%;
+			width: 100%;
+		}
 
-		#VectorBrush {display: inline-block;};
+		#VectorBrush {display: inline-block;}
+
+		button {
+			font-size: 2em;
+			background: #fff;
+			border-radius: 10%;
+			border-style: solid;
+			border-color: #000;
+			border-width: 1px;
+			cursor: pointer;
+			float: left;
+			margin-left: 10px;
+		}
+
+		.right {float: right; margin-right: 20px;}
+
+		h1 {
+			font-family: sans-serif;
+		}
 	</style>
 </head>
 <body>
 	<div class="menu" style="display: none">
-		<h2>Samples content</h2>
+		<h2>Choose a dataset to label</h2>
 
-		<ol>
-			<li>Choose a dataset to label</li>
-			<ol>
-				<li><a href="javascript: void(0)" id="sample1" onclick="load(1)">Sea lion counter</a></li>
-			</ol>
-		</ol>
+		<ul>
+			<li><a href="javascript: void(0)" id="sample1" onclick="load(1)">Sea lion counter</a></li>
+		</ul>
 	</div>
 
 	<div class="app" style="display: none">
 		<h3 class="title"></h3>
-		<canvas id="canvas" oncontextmenu="event.preventDefault()" class="sample_0"></canvas>
 		<div class="buttons">
+			<h1>Total Counted: <span id="object_count">0</span></h1>
+		</div>
+		<canvas id="canvas" oncontextmenu="event.preventDefault()" class="sample_0"></canvas>
+		<div class="buttons2">
+
 			<div id="VectorBrush" style="display: none">
-				<button onclick="WILL.switch(WILL.Color.from(255, 0, 0, 1))">Adult</button>
-				<button onclick="WILL.switch(WILL.Color.from(0, 255, 0, 1))">Juvenile</button>
-				<button onclick="WILL.switch(WILL.Color.from(0, 0, 255, 1))">Pup</button>
+				<button style="background-color: pink"; onclick="WILL.switch(WILL.Color.from(255, 0, 0, 1))">Adult</button>
+				<button style="background-color: lightgreen"; onclick="WILL.switch(WILL.Color.from(0, 255, 0, 1))">Juvenile</button>
+				<button style="background-color: lightblue"; onclick="WILL.switch(WILL.Color.from(0, 0, 255, 1))">Pup</button>
 			</div>
 
-			<button onclick="WILL.clear()">clear</button>
-		    <h3 class="right">Total counted: <span id="object_count">0</span></h3>
-
-			<button id="next" onclick="next_image()">Next</button>
-			<button id="analyse" style="display: none" onclick="analyse()">Analyze</button>
 
 			<div class="right">
+				<button class="right" onclick="WILL.clear()">Clear</button>
+				<button id="next" onclick="nextImage()">Next Image</button>
 				<button onclick="load()">End session</button>
+				<br>
+				<div id="analyse" style="display: none; font-size: 8px;" onclick="analyse()">Analyze</div>
 			</div>
 		</div>
 	</div>
