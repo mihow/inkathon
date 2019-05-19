@@ -6,6 +6,7 @@ let Calculators = {
 		if (isNaN(current.force)) {
 			// previous, current, next, minValue, maxValue, initialValue, finalValue, minSpeed, maxSpeed, remap
 			point.size = InkBuilder.calculateBasedOnSpeed(previous, current, next, 4, 12, 0.5, null, 100, 4000, v => v);
+			point.blue = InkBuilder.calculateBasedOnSpeed(previous, current, next, 4, 12, 0.5, null, 100, 4000, v => v);
 		}
 		else {
 			point.size = 0.5 + 10 * current.force + 3.0 * Math.cos(current.altitudeAngle);
@@ -41,6 +42,7 @@ let Calculators = {
 
 			point.scaleY = 1.0;
 			point.offsetY = 0;
+			console.log(point);
 		}
 
 		return point;

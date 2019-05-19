@@ -50,6 +50,7 @@ addEventListener("load", () => {
 	let resize = debounce(() => inker.resize(window.innerWidth - 5, window.innerHeight - 50), 200)
 
 	let penEvent = false;
+	console.log('ready');
 
 	document.addEventListener("pointerdown", e => (penEvent = (e.pointerType == "pen")))
 	document.addEventListener("pointerup", e => penEvent = false)

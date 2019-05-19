@@ -23,7 +23,7 @@ class VectorInking extends Inking {
 			collectSensorData: true
 		}, SIMPLE_LAYOUT_VECTOR, PEN_LAYOUT_VECTOR);
 
-		let strokeColor = Color.from(255, 0, 0, 0.3);
+		let strokeColor = Color.from(255, 0, 0, 1);
 
 		this.canvas = InkCanvas2D.createInstance(canvas, width, height);
 		this.strokesLayer = this.canvas.createLayer();
@@ -46,7 +46,7 @@ class VectorInking extends Inking {
 
 			this.strokeRenderer.drawPreliminary(pathPart.predicted);
 
-			this.strokeRenderer.color = color;
+			//this.strokeRenderer.color = color;
 
 			let dirtyArea = RectTools.intersect(this.strokeRenderer.updatedArea, this.canvas.bounds);
 

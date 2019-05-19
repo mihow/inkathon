@@ -45,10 +45,13 @@ class Inking {
 
 		if (this.strokeRenderer) {
 			let stroke = this.strokeRenderer.toStroke(this.builder);
+			console.log(stroke);
 			this.strokes.push(stroke);
 		}
 
 		this.phase = null;
+		updateCount();
+		updateColor();
 	}
 
 	abort() {
@@ -92,6 +95,7 @@ class Inking {
 		this.canvas.clear();
 
 		this.strokes = [];
+		updateCount();
 	}
 
 	encode() {
