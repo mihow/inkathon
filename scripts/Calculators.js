@@ -42,7 +42,7 @@ let Calculators = {
 
 			point.scaleY = 1.0;
 			point.offsetY = 0;
-			console.log(point);
+			//console.log(point);
 		}
 
 		return point;

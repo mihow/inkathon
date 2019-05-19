@@ -40,6 +40,11 @@ addEventListener("load", () => {
 
 	WILL.switch = (color) => {
 		if (color) {
+			let currentColor = WILL.strokeRenderer.color;
+			if (currentColor.red !== color.red) {
+				console.log("Switching color from", WILL.strokeRenderer.color, "to", color);
+				WILL.lastColor = currentColor;
+			}
 			inker = vInker
 			inker.strokeRenderer.configure({ color })
 		}

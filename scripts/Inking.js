@@ -11,6 +11,7 @@ class Inking {
 		this.strokes = [];
 
 		this.codec = new InkCodec();
+		this.lastColor = Color.from(255, 0, 0);
 	}
 
 	addPoint(input) {
@@ -20,6 +21,7 @@ class Inking {
 			if (input.changedTouches) input = input.changedTouches[0];
 			sensorPoint = InkBuilder.createSensorPoint(input, Math.max(input.offsetX, 0), Math.max(input.clientY, 0));
 		}
+		// console.log(sensorPoint);
 
 		this.builder.add(this.phase, sensorPoint, null);
 	}
@@ -32,6 +34,16 @@ class Inking {
 		else
 			this.builder = this.builderSIMPLE
 
+		switch (e.buttons) {
+			case 2:
+				this.switch(Color.from(0,0,255, 1));
+				break;
+			case 32:
+				this.switch(Color.from(0,255,0, 1));
+				break;
+			default:
+				break;
+		}
 		this.addPoint(e);
 		this.drawPath(this.builder.getPathPart());
 	}
@@ -45,7 +57,7 @@ class Inking {
 
 		if (this.strokeRenderer) {
 			let stroke = this.strokeRenderer.toStroke(this.builder);
-			console.log(stroke);
+			//console.log(stroke);
 			this.strokes.push(stroke);
 		}
 

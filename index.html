@@ -4,7 +4,7 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
 	<meta http-equiv="X-UA-Compatible" content="ie=edge">
-	<title>WILL 3 beta demo</title>
+	<title>Ink in the Loop: Sea lion counting</title>
 
 	<script src="./engine/kotlin.js"></script>
 	<script src="./engine/wacom-digital-ink-min.js"></script>
@@ -63,7 +63,6 @@
 				return response.arrayBuffer();
 			}).then(buffer => {
 				let data = WILL.decode(new Uint8Array(buffer));
-
 				console.log(data)
 			}).catch(console.error)
 		}
@@ -160,10 +159,16 @@
 			margin-left: 10px;
 		}
 
+		.left {float: left;}
 		.right {float: right; margin-right: 20px;}
 
 		h1 {
 			font-family: sans-serif;
+		}
+		.count_title {
+			margin-top: 1px;
+			margin-left: 14px;
+			float: left;
 		}
 	</style>
 </head>
@@ -179,15 +184,15 @@
 	<div class="app" style="display: none">
 		<h3 class="title"></h3>
 		<div class="buttons">
-			<h1>Total Counted: <span id="object_count">0</span></h1>
 		</div>
 		<canvas id="canvas" oncontextmenu="event.preventDefault()" class="sample_0"></canvas>
 		<div class="buttons2">
 
-			<div id="VectorBrush" style="display: none">
+			<div id="VectorBrush" style="display: none" class="left">
 				<button style="background-color: pink"; onclick="WILL.switch(WILL.Color.from(255, 0, 0, 1))">Adult</button>
 				<button style="background-color: lightgreen"; onclick="WILL.switch(WILL.Color.from(0, 255, 0, 1))">Juvenile</button>
 				<button style="background-color: lightblue"; onclick="WILL.switch(WILL.Color.from(0, 0, 255, 1))">Pup</button>
+				<h1 class="count_title">Total Counted: <span id="object_count">0</span></h1>
 			</div>
 
 
